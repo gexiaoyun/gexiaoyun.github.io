@@ -1,0 +1,737 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="yKrA4Uku5n" />
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="js中apply和call的使用," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="call和apply介绍：在js中call 和 apply 都是为了改变某个函数运行时的 context 即上下文而存在的，换句话说，就是为了改变函数体内部 this 的指向。call 和 apply二者的作用完全一样，只是接受参数的方式不太一样。
+1、callcall的官方定义：
+
+语法：call([thisObj[,arg1[, arg2[, [,.argN]]]]])
+参数 thisObj">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js中apply和call的使用">
+<meta property="og:url" content="http://yoursite.com/2017/07/19/js中apply和call的使用/index.html">
+<meta property="og:site_name" content="藏剑飘零">
+<meta property="og:description" content="call和apply介绍：在js中call 和 apply 都是为了改变某个函数运行时的 context 即上下文而存在的，换句话说，就是为了改变函数体内部 this 的指向。call 和 apply二者的作用完全一样，只是接受参数的方式不太一样。
+1、callcall的官方定义：
+
+语法：call([thisObj[,arg1[, arg2[, [,.argN]]]]])
+参数 thisObj">
+<meta property="og:updated_time" content="2017-07-19T14:07:11.951Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="js中apply和call的使用">
+<meta name="twitter:description" content="call和apply介绍：在js中call 和 apply 都是为了改变某个函数运行时的 context 即上下文而存在的，换句话说，就是为了改变函数体内部 this 的指向。call 和 apply二者的作用完全一样，只是接受参数的方式不太一样。
+1、callcall的官方定义：
+
+语法：call([thisObj[,arg1[, arg2[, [,.argN]]]]])
+参数 thisObj">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/19/js中apply和call的使用/"/>
+
+
+
+
+
+  <title> js中apply和call的使用 | 藏剑飘零 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">藏剑飘零</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">天下事有难易乎？为之，则难者亦易矣；不为，则易者亦难矣。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/19/js中apply和call的使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="葛小云">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tu.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="藏剑飘零">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                js中apply和call的使用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-19T20:30:56+08:00">
+                2017-07-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>call和apply介绍：<br>在js中call 和 apply 都是为了改变某个函数运行时的 context 即上下文而存在的，换句话说，就是为了改变函数体内部 this 的指向。<br>call 和 apply二者的作用完全一样，只是接受参数的方式不太一样。</p>
+<h2 id="1、call"><a href="#1、call" class="headerlink" title="1、call"></a>1、call</h2><p>call的官方定义：</p>
+<blockquote>
+<p>语法：call([thisObj[,arg1[, arg2[, [,.argN]]]]])</p>
+<p>参数 thisObj 可选项。将被用作当前对象的对象。 arg1, arg2, , argN 可选项。将被传递方法参数序列。</p>
+<p>说明<br>  call 方法可以用来代替另一个对象调用一个方法。call 方法可将一个函数的对象上下文从初始的上下文改变为由 thisObj 指定的新对象。<br>如果没有提供 thisObj 参数，那么 Global 对象被用作thisObj。说明白一点其实就是更改对象的内部指针，即改变对象的this指向的内容。这在面向对象的js编程过程中有时是很有用的。</p>
+</blockquote>
+<p>由官方定义可以看出call括号后面的的thisObj参数，thisObj为你要指定this指向的新对象对象，后面的arg1，arg2，，argN为可选项，以逗号分割传入。</p>
+<a id="more"></a>
+<p>例如：</p>
+<p>1、call应用实例1<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">var aa = <span class="keyword">function</span>(name,num1,num2)&#123;</div><div class="line">    this.name = name;</div><div class="line">    this.num1 = num1;</div><div class="line">    this.num2 = num2;</div><div class="line">&#125;</div><div class="line"></div><div class="line">aa.prototype.getName = <span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">    console.log(this.name)</div><div class="line">&#125;;</div><div class="line"></div><div class="line">aa.prototype.add = <span class="function"><span class="title">function</span></span>()&#123;</div><div class="line"></div><div class="line">	console.log(this.num1,this.num2)</div><div class="line">	<span class="built_in">return</span> this.num1 + this.num2</div><div class="line">&#125;;</div><div class="line"></div><div class="line">var a = new aa(<span class="string">'gxy'</span>);</div><div class="line"></div><div class="line">var bb = <span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">	this.name = <span class="string">'我是测试!'</span></div><div class="line">    this.age = <span class="string">'24'</span>;</div><div class="line">    this.num1 = 12;</div><div class="line">    this.num2 = 14;</div><div class="line">	a.getName.call(this);   //我是测试！</div><div class="line">	console.log(a.add.call(this))// 26</div><div class="line">&#125;</div><div class="line"></div><div class="line">bb.prototype.getAge = <span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">    console.log(this.age)</div><div class="line">&#125;</div><div class="line">var b = new bb();</div><div class="line">```bash</div><div class="line">在上面的例子中第一个call为bb调用a中的getName，因为getName为输出this.name，所以在bb中会找到bb下面的this.name，所以输出为‘我是测试！’，第二个call为bb调用a中的add方法，让bb中的num1 和num2两数相加，而得出值。</div><div class="line"></div><div class="line">2、call应用实例2</div><div class="line">```bash</div><div class="line">var func=new <span class="function"><span class="title">function</span></span>()&#123;this.a=<span class="string">"func"</span>&#125;</div><div class="line">var myfunc=<span class="keyword">function</span>(x)&#123;</div><div class="line">   var a=<span class="string">"myfunc"</span>;</div><div class="line">   alert(this.a);</div><div class="line">  	alert(x);</div><div class="line">&#125;</div><div class="line">myfunc.call(func,<span class="string">"var"</span>);</div></pre></td></tr></table></figure></p>
+<p>可见分别弹出了func和var。先调用func函数，用this.a=”func”替换myfunc中的this.a ; 然后将”var”传递给方法myfunc的参数x可见分别弹出了func和var。</p>
+<p>在上面三个例子中，我们可以看出call为括号里面的第一个参数调用call前的方法</p>
+<p>3、实现继承<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> Animal(name) &#123;</div><div class="line">  this.name = name;</div><div class="line">  this.showName = <span class="function"><span class="title">function</span></span> () &#123;</div><div class="line">    alert(this.name);</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">function</span> Cat(name) &#123;</div><div class="line">  Animal.call(this, name);</div><div class="line">&#125;</div><div class="line">var cat = new Cat(<span class="string">'Black Cat'</span>);</div><div class="line">cat.showName();</div></pre></td></tr></table></figure></p>
+<p>4、实例实现多重继承<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">var s1 = <span class="keyword">function</span>(name)&#123;</div><div class="line">  this.name = name;</div><div class="line">&#125;</div><div class="line"></div><div class="line">var s2 = <span class="keyword">function</span>(sex)&#123;</div><div class="line">  this.sex = sex;</div><div class="line">&#125;</div><div class="line"></div><div class="line">var s3 = <span class="keyword">function</span>(age)&#123;</div><div class="line">  this.age = age;</div><div class="line">&#125;</div><div class="line"></div><div class="line">var Student = <span class="keyword">function</span>(name,sex,age,score)&#123;</div><div class="line">  s1.call(this,name);</div><div class="line">  s2.call(this,sex);</div><div class="line">  s3.call(this,age);</div><div class="line">  this.score = score;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Student.prototype.construction = Student;</div><div class="line">var s = new Student(<span class="string">'jack'</span>,<span class="string">'male'</span>,<span class="string">'12'</span>,<span class="string">'100'</span>);</div><div class="line">console.log(s.name); //输出:jack</div><div class="line">console.log(s.sex);  //输出:male </div><div class="line">console.log(s.age);  //输出:12</div><div class="line">console.log(s.score);//输出:100</div></pre></td></tr></table></figure></p>
+<p>这样我们就可以根据各个不同的功能模块分不同的程序员独立开发，最后合并起来，实现了多重继承</p>
+<h2 id="2、apply"><a href="#2、apply" class="headerlink" title="2、apply"></a>2、apply</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">function</span> Person(name,age)&#123;   //定义一个类，人类  	</div><div class="line">    this.name=name;     //名字  </div><div class="line">    this.age=age;       //年龄 </div><div class="line">    this.sayhello=<span class="function"><span class="title">function</span></span>()&#123;console.log(<span class="string">"hello"</span>)&#125;;</div><div class="line">&#125; </div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">Print</span></span>()&#123;            //显示类的属性 	</div><div class="line">    this.funcName=<span class="string">"Print"</span>; </div><div class="line">    this.show=<span class="function"><span class="title">function</span></span>()&#123;      </div><div class="line">        var msg=[];</div><div class="line">        console.log(this)</div><div class="line">        <span class="keyword">for</span>(var key <span class="keyword">in</span> this)&#123; </div><div class="line">            <span class="keyword">if</span>(typeof(this[key])!=<span class="string">"function"</span>)&#123;</div><div class="line">                msg.push([key,<span class="string">":"</span>,this[key]].join(<span class="string">""</span>));</div><div class="line">            &#125;</div><div class="line">        &#125; </div><div class="line">        console.log(msg.join(<span class="string">" "</span>));</div><div class="line">    &#125;;</div><div class="line">&#125; </div><div class="line"><span class="keyword">function</span> Student(name,age,grade,school)&#123;    //学生类 	</div><div class="line">    this.grade=grade;                //年级 </div><div class="line">    this.school=school;                 //学校 </div><div class="line">    Person.apply(this,arguments);</div><div class="line">    Print.apply(this,arguments);</div><div class="line">&#125; </div><div class="line">var p1=new Person(<span class="string">"jake"</span>,10);</div><div class="line">p1.sayhello();</div><div class="line">var s1=new Student(<span class="string">"tom"</span>,13,6,<span class="string">"清华小学"</span>);</div><div class="line">s1.show();</div><div class="line">s1.sayhello();</div><div class="line">console.log(s1.funcName);</div></pre></td></tr></table></figure>
+<p>上例中学生类本来不具备任何方法，但是在Person.apply(this,arguments)后，<br>他就具备了Person类的sayhello方法和所有属性。<br>在Print.apply(this,arguments)后就自动得到了show()方法</p>
+<p>2、利用Apply的参数数组化来提高<br>Function.apply()在提升程序性能方面的技巧<br>我们先从Math.max()函数说起，Math.max后面可以接任意个参数，最后返回所有参数中的最大值。<br>比如<br>alert(Math.max(5,8))   //8<br>alert(Math.max(5,7,9,3,1,6))   //9<br>但是在很多情况下，我们需要找出数组中最大的元素。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var arr=[5,7,9,1]</div><div class="line">alert(Math.max(arr))    // 这样却是不行的。一定要这样写</div><div class="line"><span class="keyword">function</span> getMax(arr)&#123;</div><div class="line">    var arrLen=arr.length;</div><div class="line">    <span class="keyword">for</span>(var i=0,ret=arr[0];i&lt;arrLen;i++)&#123;</div><div class="line">        ret=Math.max(ret,arr[i]);       </div><div class="line">    &#125;</div><div class="line">    <span class="built_in">return</span> ret;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这样写麻烦而且低效。如果用 apply呢，看代码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">function</span> getMax2(arr)&#123;</div><div class="line">    <span class="built_in">return</span> Math.max.apply(null,arr);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>两段代码达到了同样的目的，但是getMax2却优雅，高效，简洁得多。</p>
+<p>再比如数组的push方法。<br>var arr1=[1,3,4];<br>var arr2=[3,4,5];<br>如果我们要把 arr2展开，然后一个一个追加到arr1中去，最后让arr1=[1,3,4,3,4,5]<br>arr1.push(arr2)显然是不行的。 因为这样做会得到[1,3,4,[3,4,5]]<br>我们只能用一个循环去一个一个的push(当然也可以用arr1.concat(arr2)，但是concat方法并不改变arr1本身)<br>自从有了Apply,事情就变得如此简单<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Array.prototype.push.apply(arr1,arr2)</div></pre></td></tr></table></figure></p>
+<p>备注：这里相当于把arr1应用Array的push方法，然后把arr2当成一个数组参数再一个个push到arr1里面去。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/js中apply和call的使用/" rel="tag"># js中apply和call的使用</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/10/组件之间通讯-vuex/" rel="next" title="组件之间通讯-vuex(基础篇（粗略）)">
+                <i class="fa fa-chevron-left"></i> 组件之间通讯-vuex(基础篇（粗略）)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/tu.png"
+               alt="葛小云" />
+          <p class="site-author-name" itemprop="name">葛小云</p>
+           
+              <p class="site-description motion-element" itemprop="description">天下事有难易乎？为之，则难者亦易矣；不为，则易者亦难矣。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、call"><span class="nav-number">1.</span> <span class="nav-text">1、call</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、apply"><span class="nav-number">2.</span> <span class="nav-text">2、apply</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">葛小云</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

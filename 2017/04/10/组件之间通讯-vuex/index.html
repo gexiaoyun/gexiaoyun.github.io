@@ -1,0 +1,735 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="yKrA4Uku5n" />
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="今天在用vue做pc端网站的时候，卡在非父子之间通讯：导航组件–登陆组件之间的cookie获取值时，因为在导航到登陆组件之间已经有一个通讯事件，即点击登陆按钮弹出登陆框的事件。可是在登陆后cookie却不能实时获取，只能刷新后才获取，于是就萌生了由vuex来实现这功能的想法。
+1、什么是vuexvuex官方的介绍是
+
+uex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用集中式存储管">
+<meta property="og:type" content="article">
+<meta property="og:title" content="组件之间通讯-vuex(基础篇（粗略）)">
+<meta property="og:url" content="http://yoursite.com/2017/04/10/组件之间通讯-vuex/index.html">
+<meta property="og:site_name" content="藏剑飘零">
+<meta property="og:description" content="今天在用vue做pc端网站的时候，卡在非父子之间通讯：导航组件–登陆组件之间的cookie获取值时，因为在导航到登陆组件之间已经有一个通讯事件，即点击登陆按钮弹出登陆框的事件。可是在登陆后cookie却不能实时获取，只能刷新后才获取，于是就萌生了由vuex来实现这功能的想法。
+1、什么是vuexvuex官方的介绍是
+
+uex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用集中式存储管">
+<meta property="og:updated_time" content="2017-04-10T14:54:15.914Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="组件之间通讯-vuex(基础篇（粗略）)">
+<meta name="twitter:description" content="今天在用vue做pc端网站的时候，卡在非父子之间通讯：导航组件–登陆组件之间的cookie获取值时，因为在导航到登陆组件之间已经有一个通讯事件，即点击登陆按钮弹出登陆框的事件。可是在登陆后cookie却不能实时获取，只能刷新后才获取，于是就萌生了由vuex来实现这功能的想法。
+1、什么是vuexvuex官方的介绍是
+
+uex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用集中式存储管">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/10/组件之间通讯-vuex/"/>
+
+
+
+
+
+  <title> 组件之间通讯-vuex(基础篇（粗略）) | 藏剑飘零 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">藏剑飘零</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">天下事有难易乎？为之，则难者亦易矣；不为，则易者亦难矣。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/10/组件之间通讯-vuex/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="葛小云">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tu.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="藏剑飘零">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                组件之间通讯-vuex(基础篇（粗略）)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-10T21:53:25+08:00">
+                2017-04-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今天在用vue做pc端网站的时候，卡在非父子之间通讯：导航组件–登陆组件之间的cookie获取值时，因为在导航到登陆组件之间已经有一个通讯事件，即点击登陆按钮弹出登陆框的事件。可是在登陆后cookie却不能实时获取，只能刷新后才获取，于是就萌生了由vuex来实现这功能的想法。</p>
+<h2 id="1、什么是vuex"><a href="#1、什么是vuex" class="headerlink" title="1、什么是vuex"></a>1、什么是vuex</h2><p>vuex官方的介绍是</p>
+<blockquote>
+<p>uex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。Vuex 也集成到 Vue 的官方调试工具 devtools extension，提供了诸如零配置的 time-travel 调试、状态快照导入导出等高级调试功能。</p>
+</blockquote>
+<p>而在前端群中的说法是在你不知道这地方要不要用vuex的情况下就不要用vuex。因为vuex适用于中大型项目，按我的理解是在数据不是繁杂到你实在不得不想有个地方来统一管理的时候就不要用vuex来进行你项目的数据管理</p>
+<a id="more"></a>
+<h2 id="2、vuex的个人理解"><a href="#2、vuex的个人理解" class="headerlink" title="2、vuex的个人理解"></a>2、vuex的个人理解</h2><p>关于vuex的具体api可以去官网自己看看理解。这次重点记录下我自己今天终于弄懂的关于vuex的基础。</p>
+<ol>
+<li>store：是你所要管理数据的默认值</li>
+<li>mutations：是你要对数据所要做的操作，是更改 Vuex 的 store 中的状态的唯一方法（提交 mutations）</li>
+<li>actions：是分发器-相当于你要来触发mutations的开关</li>
+<li>getters：是你所要传递出去的数据（本人大概理解）</li>
+</ol>
+<h2 id="3、vuex的使用"><a href="#3、vuex的使用" class="headerlink" title="3、vuex的使用"></a>3、vuex的使用</h2><p>首先我们要在node中安装vuex<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install vuex --save-dev</div></pre></td></tr></table></figure></p>
+<p>其次在main.js中引用<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import Vuex from <span class="string">'vuex'</span></div><div class="line">import store from <span class="string">'./vuex/store'</span></div><div class="line">Vue.use(Vuex)</div></pre></td></tr></table></figure></p>
+<p>store要注入到main的app中，以便让全局获取</p>
+<p>然后在src中新建一个vuex文件夹在里面建一个store.js<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">const state = &#123;</div><div class="line">    count:0</div><div class="line">&#125;</div><div class="line"></div><div class="line">const mutations = &#123;</div><div class="line">    increment(state)&#123;</div><div class="line">        state.count = state.count + 1;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">const actions = &#123;</div><div class="line">    increment(&#123;commit&#125;) =&gt; commit(<span class="string">'increment'</span>);   </div><div class="line">    //Action 函数接受一个与 store 实例具有相同方法和属性的 context 对象，因此你可以调用 context.commit 提交一个 mutation，或者通过 context.state 和 context.getters 来获取 state 和 getters。</div><div class="line">&#125;</div><div class="line"></div><div class="line">const getters = &#123;</div><div class="line">    tode: state =&gt; &#123;</div><div class="line">        <span class="built_in">return</span> state.count</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">export</span> default new Vuex.store(&#123;</div><div class="line">    state,mutations,actions,getters</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<p>在上面代码中，我们默认给state一个count:0的值，再在mutations中来进行一个为count+1的操作，然后再actions中来触发mutations的操作，之后在getters中来给页面获取数据（获取数据的一个途经），最后在下面抛出让全局获取到</p>
+<h2 id="4、页面中获取数据"><a href="#4、页面中获取数据" class="headerlink" title="4、页面中获取数据"></a>4、页面中获取数据</h2><p>基于上面的配置后，就要在页面中来获取在state中获取的数据。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">  import &#123; mapState,mapMutations,mapActions,mapGetters  &#125; from <span class="string">'vuex'</span></div><div class="line">  </div><div class="line">  computed: &#123;</div><div class="line">      // 使用对象展开运算符将 getters 混入 computed 对象中</div><div class="line">  ...mapGetters([</div><div class="line">    <span class="string">'doneTodosCount'</span>,</div><div class="line">    <span class="string">'anotherGetter'</span>,</div><div class="line">    // ...</div><div class="line">  ]),</div><div class="line">  ... mapState([</div><div class="line">    // 映射 this.count 为 store.state.count</div><div class="line">    <span class="string">'count'</span></div><div class="line">  ])</div><div class="line">&#125;,</div><div class="line">methods: &#123;</div><div class="line">  ...mapMutations([</div><div class="line">    <span class="string">'increment'</span> // 映射 this.increment() 为 this.<span class="variable">$store</span>.commit(<span class="string">'increment'</span>)</div><div class="line">  ]),</div><div class="line">  ...mapMutations(&#123;</div><div class="line">    add: <span class="string">'increment'</span> // 映射 this.add() 为 this.<span class="variable">$store</span>.commit(<span class="string">'increment'</span>)</div><div class="line">  &#125;),</div><div class="line">  ...mapActions([</div><div class="line">    <span class="string">'increment'</span> // 映射 this.increment() 为 this.<span class="variable">$store</span>.dispatch(<span class="string">'increment'</span>)</div><div class="line">  ]),</div><div class="line">  ...mapActions(&#123;</div><div class="line">    add: <span class="string">'increment'</span> // 映射 this.add() 为 this.<span class="variable">$store</span>.dispatch(<span class="string">'increment'</span>)</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后在vue的页面中你可以用<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;p&gt;&#123;&#123;<span class="variable">$store</span>.state.count&#125;&#125;&lt;/p&gt;</div></pre></td></tr></table></figure></p>
+<p>来获取state中count的值，也可以在写了mapGetters或者mapState 之后直接来用或者来循环值以便达到更新数据的目的。</p>
+<p>而在引入mapActions后，你可以在methods的任何函数中可以用<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">this.increment()  //触发定义的开关</div></pre></td></tr></table></figure></p>
+<p>这是在今天（2017年4月10日）写的实际应用中所接触到的基础知识，下次有空再补齐全点。。嘿嘿</p>
+<h2 id="5、参考文章"><a href="#5、参考文章" class="headerlink" title="5、参考文章"></a>5、参考文章</h2><p>简书：<a href="http://www.jianshu.com/p/13bec8f5b17d" target="_blank" rel="external">http://www.jianshu.com/p/13bec8f5b17d</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/05/vue2-0组件使用记录/" rel="next" title="vue2.0组件使用记录">
+                <i class="fa fa-chevron-left"></i> vue2.0组件使用记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/19/js中apply和call的使用/" rel="prev" title="js中apply和call的使用">
+                js中apply和call的使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/tu.png"
+               alt="葛小云" />
+          <p class="site-author-name" itemprop="name">葛小云</p>
+           
+              <p class="site-description motion-element" itemprop="description">天下事有难易乎？为之，则难者亦易矣；不为，则易者亦难矣。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、什么是vuex"><span class="nav-number">1.</span> <span class="nav-text">1、什么是vuex</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、vuex的个人理解"><span class="nav-number">2.</span> <span class="nav-text">2、vuex的个人理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、vuex的使用"><span class="nav-number">3.</span> <span class="nav-text">3、vuex的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、页面中获取数据"><span class="nav-number">4.</span> <span class="nav-text">4、页面中获取数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、参考文章"><span class="nav-number">5.</span> <span class="nav-text">5、参考文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">葛小云</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+</body>
+</html>
